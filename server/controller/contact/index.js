@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const { Contact } = require("../../models/contact");
 const { validateContact } = require("../../services/contact");
 
@@ -82,6 +83,14 @@ const updateContact = async (req, res) => {
 }
 
 const deleteContact = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).send({ 
+            message: "Invalid ID format", 
+            error: true,
+            data: []
+        });
+    }
+    
     const myContacts =  await Contact.deleteOne({_id:req.params.id});
     if(myContacts?.deletedCount == 0) return res.status(404).send({
         error: true,
