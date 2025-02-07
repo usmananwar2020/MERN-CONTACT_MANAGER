@@ -4,7 +4,7 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 
 const loginUser = async(req, res) => {
-    validateUser(req, OnboardingKeys.LOGIN)
+    validateUser(req, res, OnboardingKeys.LOGIN)
 
     let user = await CheckEmail(req)
     if(!user) return res.status(400).send({

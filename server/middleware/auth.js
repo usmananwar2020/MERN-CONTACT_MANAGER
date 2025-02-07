@@ -2,9 +2,8 @@ const JWT = require('jsonwebtoken');
 const config = require('config');
 
 module.exports = function (req, res, next) {
-    const token = req.header('authorization').split(" ");
-
-    if(!token[1]) return res.status(400).send({
+    const token = req.header('authorization')?.split(" ");
+    if(!token?.[1]) return res.status(400).send({
         message: 'Token not exist',
         data: [],
         error: true

@@ -1,13 +1,14 @@
 const { CheckEmail, validateUser } = require("../../services/user");
-const { OnboardingKeys } = ("../../utils/enum");
-const { Users } = ("../../models/user");
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const { OnboardingKeys } = require("../../utils/enum");
+const { Users } = require("../../models/user");
 
 const registerUser = async(req, res) => {
-        validateUser(req, OnboardingKeys?.REGISTER)
-    
-        if(CheckEmail(req)) return res.status(400).send({
+        validateUser(req, res, OnboardingKeys?.REGISTER)
+
+        let _checkEmail = await CheckEmail(req);
+        if(_checkEmail) return res.status(400).send({
             message: 'Email already exist',
             data: [],
             error: true
