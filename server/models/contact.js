@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Joi = require('joi');
 
 
 const contactSchema = mongoose.Schema({
@@ -56,20 +55,4 @@ const contactSchema = mongoose.Schema({
 
 const Contact = mongoose.model('contact', contactSchema);
 
-
-function contactValidation(contact){
-    const contactSchema = Joi.object({
-        firstname:Joi.string().max(50).min(3).required(),
-        lastname:Joi.string().max(50).min(3).required(),
-        email:Joi.string().max(255).min(3).email().required(),
-        phone:Joi.string().max(50).min(11).required(),
-        address:Joi.string().max(255).min(3).required(),
-        note:Joi.string().max(1024),
-        category:Joi.string().required(),
-        userId: Joi.string().required()
-    })
-    return contactSchema.validate(contact);
-}
-
 exports.Contact = Contact;
-exports.Validate = contactValidation;

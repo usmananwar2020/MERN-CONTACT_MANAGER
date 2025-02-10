@@ -1,10 +1,8 @@
-const { CheckEmail, validateUser } = require("../../services/user");
-const { OnboardingKeys } = require("../../utils/enum");
+const { CheckEmail } = require("../../services/user");
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 
 const loginUser = async(req, res) => {
-    validateUser(req, res, OnboardingKeys.LOGIN)
 
     let user = await CheckEmail(req)
     if(!user) return res.status(400).send({

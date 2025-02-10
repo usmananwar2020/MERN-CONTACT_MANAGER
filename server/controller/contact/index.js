@@ -1,6 +1,5 @@
 const { default: mongoose } = require("mongoose");
 const { Contact } = require("../../models/contact");
-const { validateContact } = require("../../services/contact");
 
 const getAllcontacts = async (req, res) => {
     const searchParams = req.query;
@@ -57,7 +56,6 @@ const getIdBaseContact = async (req, res) => {
     });
 }
 const createNewContact = async (req, res) => {
-    validateContact(req);
 
     let contact = await new Contact(req.body);
     contact.save();
@@ -70,7 +68,6 @@ const createNewContact = async (req, res) => {
 }
 
 const updateContact = async (req, res) => {
-    validateContact(req);
 
     const myContacts =  await Contact.findByIdAndUpdate(req.params.id,req.body,{new: true});
     myContacts.save();

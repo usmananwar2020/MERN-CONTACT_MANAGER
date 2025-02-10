@@ -1,5 +1,5 @@
 const { Category } = require("../../models/category");
-const { ValidateCategory, category404 } = require("../../services/category");
+const { category404 } = require("../../services/category");
 
 const getAllCategory = async(req, res) => {
     const searchParams = req.query;
@@ -29,7 +29,6 @@ const getIdBaseCategory = async(req, res) => {
 }
 
 const createNewCategory = async(req, res) => {
-    ValidateCategory(req);
 
     const data = await new Category(req.body);
     data.save();
@@ -41,7 +40,6 @@ const createNewCategory = async(req, res) => {
 }
 
 const updateCategory = async(req, res) => {
-    ValidateCategory(req);
     const cate =  await Category.findByIdAndUpdate(req.params.id,req.body,{new: true});
     if(!cate) {
         return category404(res);
