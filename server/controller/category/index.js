@@ -1,17 +1,10 @@
 const { Category } = require("../../models/category");
-const { category404 } = require("../../services/category");
+const { searchCategory, findCategoryById, deleteCategoryById,  } = require("../../services/category");
 const { Failuer, Success } = require("../../utils/responseHandler");
 
 const getAllCategory = async(req, res) => {
     try{
-        const searchParams = req.query;
-        const query = {}
-        if(searchParams.search){
-            query.$or = [
-                {category: { $regex: new RegExp(searchParams.search, 'i') }},
-            ]
-        }
-        const data =  await Category.find(query);
+        const data =  await searchCategory(req);
         Success(res, false, 'Retrive all categories successfully', data);
     }
     catch(error){
@@ -19,9 +12,10 @@ const getAllCategory = async(req, res) => {
     }
 
 }
+
 const getIdBaseCategory = async(req, res) => {
     try{
-        const data =  await Category.find({_id: req.params.id});
+        const data =  await findCategoryById(req);
         if(!data){
             return Failuer(res, true, 400, 'Category doesnot exist', [])
         }
@@ -46,7 +40,7 @@ const createNewCategory = async(req, res) => {
 
 const updateCategory = async(req, res) => {
     try{
-        const cate =  await Category.findByIdAndUpdate(req.params.id,req.body,{new: true});
+        const cate =  await updateCategoryById(req);
         if(!cate) {
             return Failuer(res, true, 400, 'Category doesnot exist', [])
         }
@@ -60,7 +54,7 @@ const updateCategory = async(req, res) => {
 
 const deleteCategory = async(req, res) => {
     try{
-        const cate =  await Category.deleteOne({_id: req.params.id});
+        const cate =  await deleteCategoryById(req);
         if(cate?.deletedCount == 0){
             return Failuer(res, true, 400, 'Category doesnot exist', [])
         }
