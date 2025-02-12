@@ -2,15 +2,12 @@ const { CheckEmail } = require("../../services/user");
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const { Users } = require("../../models/user");
+const { Success, Failuer } = require("../../utils/responseHandler");
 
 const registerUser = async(req, res) => {
 
         let _checkEmail = await CheckEmail(req);
-        if(_checkEmail) return res.status(400).send({
-            message: 'Email already exist',
-            data: [],
-            error: true
-        });
+        if(_checkEmail) return Failuer(res, true, 400, 'Email already exist', [])
     
         let user = new Users(req.body);
     
@@ -23,11 +20,8 @@ const registerUser = async(req, res) => {
         const token = user.generateAuthToken();
         const result = _.pick(user,['_id', 'username', 'email'])
         result.token = token;
-    
-        res.send({
-            message: 'User register successfully',
-            data: result,
-            error: false
-        })
+
+
+        Success(res, false, 'User register successfully', result)
     }
 exports.registerUser = registerUser;

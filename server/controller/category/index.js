@@ -1,70 +1,74 @@
 const { Category } = require("../../models/category");
 const { category404 } = require("../../services/category");
+const { Failuer, Success } = require("../../utils/responseHandler");
 
 const getAllCategory = async(req, res) => {
-    const searchParams = req.query;
-    const query = {}
-    if(searchParams.search){
-        query.$or = [
-            {category: { $regex: new RegExp(searchParams.search, 'i') }},
-        ]
+    try{
+        const searchParams = req.query;
+        const query = {}
+        if(searchParams.search){
+            query.$or = [
+                {category: { $regex: new RegExp(searchParams.search, 'i') }},
+            ]
+        }
+        const data =  await Category.find(query);
+        Success(res, false, 'Retrive all categories successfully', data);
     }
-    const data =  await Category.find(query);
-    res.send({
-        message: 'Retrive all categories successfully',
-        error: false,
-        data
-    })
+    catch(error){
+        Failuer(res, true, 400, error.message, [])
+    }
+
 }
 const getIdBaseCategory = async(req, res) => {
-    const data =  await Category.find({_id: req.params.id});
-    if(!data){
-        return category404(res);
+    try{
+        const data =  await Category.find({_id: req.params.id});
+        if(!data){
+            return Failuer(res, true, 400, 'Category doesnot exist', [])
+        }
+        Success(res, false, 'Retrive all categories successfully', data);
     }
-    res.send({
-        message: 'Retrive all categories successfully',
-        error: false,
-        data
-    })
+    catch(error){
+        Failuer(res, true, 400, error.message, [])
+    }
 }
 
 const createNewCategory = async(req, res) => {
+    try{
+        const data = await new Category(req.body);
+        data.save();
+        Success(res, false, 'Category created successfully', data);
+    }
+    catch(error){
+        Failuer(res, true, 400, error.message, [])
+    }
 
-    const data = await new Category(req.body);
-    data.save();
-    res.send({
-        message: 'Category created successfully',
-        error: false,
-        data
-    })
 }
 
 const updateCategory = async(req, res) => {
-    const cate =  await Category.findByIdAndUpdate(req.params.id,req.body,{new: true});
-    if(!cate) {
-        return category404(res);
+    try{
+        const cate =  await Category.findByIdAndUpdate(req.params.id,req.body,{new: true});
+        if(!cate) {
+            return Failuer(res, true, 400, 'Category doesnot exist', [])
+        }
+        Success(res, false, 'Category updated successfully', cate);
     }
-
-    res.send({
-        message: 'Category updated successfully',
-        error: false,
-        data: cate
-    })
+    catch(error){
+        Failuer(res, true, 400, error.message, [])
+    }
 
 }
 
 const deleteCategory = async(req, res) => {
-    const cate =  await Category.deleteOne({_id: req.params.id});
-    if(cate?.deletedCount == 0){
-        return category404(res)
+    try{
+        const cate =  await Category.deleteOne({_id: req.params.id});
+        if(cate?.deletedCount == 0){
+            return Failuer(res, true, 400, 'Category doesnot exist', [])
+        }
+        Success(res, false, 'Category deleted successfully', []);
     }
-
-    res.send({
-        message: 'Category deleted successfully',
-        error: false,
-        data: []
-    })
-
+    catch(error){
+        Failuer(res, true, 400, error.message, [])
+    }
 }
 
 exports.getAllCategory = getAllCategory

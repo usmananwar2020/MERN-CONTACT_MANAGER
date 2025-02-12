@@ -1,15 +1,12 @@
 const { CheckEmail } = require("../../services/user");
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const { Failuer, Success } = require("../../utils/responseHandler");
 
 const loginUser = async(req, res) => {
 
     let user = await CheckEmail(req)
-    if(!user) return res.status(400).send({
-        message: 'Email do not exist',
-        data: [],
-        error: true
-    });
+    if(!user) return Failuer(res, true, 400, 'Email do not exist', [])
 
     const comparePassword = await bcrypt.compare(req.body.password, user.password);
     
@@ -24,10 +21,7 @@ const loginUser = async(req, res) => {
     const token = user.generateAuthToken();
     const result = _.pick(user,['_id', 'username', 'email', 'isAdmin'])
     result.token = token;
-    res.send({
-        message: 'User Login successfully',
-        data: result,
-        error: false
-    })
+
+    Success(res, false, 'User login successfully', result)
 }
 exports.loginUser = loginUser;
