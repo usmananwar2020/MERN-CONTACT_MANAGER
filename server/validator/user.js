@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { Failuer } = require('../utils/responseHandler');
 
 
  function registerUserValidation (req, res, next) {
@@ -10,12 +11,9 @@ const Joi = require('joi');
     })
     let _validate = schema.validate(req.body);
     if(_validate.error) {
-        return res.status(400).send({
-        message: _validate?.error?.details[0]?.message,
-        data: [],
-        error: true
-        });
-    }else{
+        return Failuer(res, true, 400, _validate?.error?.details[0]?.message, [])
+    }
+    else{
         next();
     }
  }
@@ -28,11 +26,7 @@ const Joi = require('joi');
     })
     let _validate = schema.validate(req.body);
     if(_validate.error) {
-        return res.status(400).send({
-        message: _validate?.error?.details[0]?.message,
-        data: [],
-        error: true
-        });
+        return Failuer(res, true, 400, _validate?.error?.details[0]?.message, [])
     }else{
         next();
     }

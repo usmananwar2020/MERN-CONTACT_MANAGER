@@ -34,7 +34,6 @@ const AddUpdateCategory = () => {
                     navigate('/categories');
                 }else{
                     handleToastMessage('error', res?.message)
-                    setIsLoading(false);
                 }
             })
         }

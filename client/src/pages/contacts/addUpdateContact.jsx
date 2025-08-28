@@ -52,7 +52,6 @@ const AddUpdateContact = () => {
                     navigate('/contacts');
                 }else{
                     handleToastMessage('error', res?.message)
-                    setIsLoading(false);
                 }
             })
         }

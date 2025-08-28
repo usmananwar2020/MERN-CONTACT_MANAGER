@@ -36,7 +36,6 @@ const Login = ({loginMode}) => {
           navigate('/contacts');
       }else{
           handleToastMessage('error', res?.message)
-          setIsLoading(false);
       }
   })
 

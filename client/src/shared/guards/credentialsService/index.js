@@ -36,7 +36,7 @@ export const IsLoggedIn = () => {
     const savedCredentials = sessionStorage.getItem(STORAGE) || localStorage.getItem(STORAGE);
     let credentials = null;
     if (savedCredentials) {
-        credentials = JSON.parse(savedCredentials);
+        credentials = JSON?.parse(savedCredentials);
     }
     return !!credentials?.isLoggedIn;
 };
@@ -44,7 +44,7 @@ export const IsLoggedIn = () => {
 export const IsAuthenticated = () => {
     const savedCredentials = sessionStorage.getItem(STORAGE) || localStorage.getItem(STORAGE);
     let credentials = null;
-    if (savedCredentials) {
+    if (savedCredentials !== 'undefined' && savedCredentials) {
         credentials = JSON.parse(savedCredentials);
     }
     return !!credentials?.token;
