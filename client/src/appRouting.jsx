@@ -12,6 +12,7 @@ import Contacts from './pages/contacts';
 import AddUpdateContact from './pages/contacts/addUpdateContact';
 import Category from './pages/category';
 import AddUpdateCategory from './pages/category/addUpdateCategory';
+import Favourite from './pages/favourite';
 
 const routes = [
   { path: "/", element: <OnBoarding />, protectedPath: false },
@@ -26,6 +27,7 @@ const routes = [
       { path: "categories", element: <Category /> },
       { path: "categories/addupdate", element: <AddUpdateCategory /> },
       { path: "categories/addupdate/:id", element: <AddUpdateCategory /> },
+      { path: "favourite", element: <Favourite /> },
     ],
   },
 ];

@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import ComponentContainer from '../../components/container/componentContainer'
 import { Delete, Edit, Visibility } from '@mui/icons-material';
-import ContactTable from './contactTable'
-import { backendCall } from '../../shared/backendServices';
-import CustomePopup from '../../shared/popup';
-import { handleToastMessage } from '../../shared/toastify';
 import { useNavigate } from 'react-router-dom';
+import CustomTable from '../../shared/customTable';
+import { backendCall } from '../../shared/backendServices';
+import ComponentContainer from '../../components/container/componentContainer';
+import CustomePopup from '../../shared/popup';
 import { GetStorage } from '../../shared/guards/credentialsService';
 
-const Contacts = () => {
-  const navigate = useNavigate();
-  const [contacts, setContacts] = useState([]);
+const Favourite = () => {
   const [contact, setContact] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
-  const [openDeletePopup, setOpenDeletePopup] = useState(false);
   const [userData, setUserData] = useState({})
 
   useEffect(() => {
@@ -22,13 +19,16 @@ const Contacts = () => {
 
   const getContacts = (search) => {
     backendCall({
-      url: `contacts?search=${search}&page=1&limit=10`,
+      url: `contacts/favorites?search=${search}&page=1&limit=10`,
       method: 'GET',
     }).then((res) => {
       if (res && !res.error) {
         setContacts(res.data)
       }
     });
+  }
+  const handleSreach = (e) => {
+    getContacts(e.target.value);
   }
   const getContactDetail = async (data) => {
     const storageData = await GetStorage();
@@ -50,45 +50,6 @@ const Contacts = () => {
       });
     }
   }
-  const handleVerifyDelete = async () => {
-    backendCall({
-      url: `contacts/${contact?._id}`,
-      method: 'DELETE',
-    }).then((res) => {
-      if (res && !res.error) {
-        handleToastMessage('success', res?.message)
-        setOpenDeletePopup(false);
-        getContacts('');
-      } else {
-        handleToastMessage('error', res?.message)
-        setOpenDeletePopup(false);
-      }
-    });
-
-  }
-  const onDelete = (row) => {
-    setContact(row)
-    setOpenDeletePopup(true);
-  }
-
-  const handleSreach = (e) => {
-    getContacts(e.target.value);
-  }
-
-  const addToFavorite = (id) => {
-    backendCall({
-      url: `contacts/favorite/${id}`,
-      method: 'PUT',
-    }).then((res) => {
-      if (res && !res.error) {
-        handleToastMessage('success', res?.message)
-        getContacts('');
-      } else {
-        handleToastMessage('error', res?.message)
-      }
-    });
-  }
-
   const columns = [
     {
       title: (
@@ -154,9 +115,6 @@ const Contacts = () => {
       render: (name, row) => (
         <span className="text-sm text-primary-dark pl-5 h-10 flex items-center gap-2 border-b border-primary-light -mr-[2px]">
           <Visibility onClick={() => getContactDetail(row)} className='cursor-pointer' />
-          <Edit onClick={() => navigate(`addupdate/${row?._id}`)} className='cursor-pointer' />
-          <Delete onClick={() => onDelete(row)} className='cursor-pointer' />
-          <input type="checkbox" checked={row?.favourite} className='cursor-pointer w-5 h-5' onClick={() => addToFavorite(row?._id)} />
         </span>
       ),
     },
@@ -164,10 +122,7 @@ const Contacts = () => {
   return (
     <ComponentContainer>
       <div className='flex justify-between p-2'>
-        <h3 className='text-primary-dark'>Contact Manager</h3>
-        <button type="button" className="!font-bold uppercase border bg-primary-light text-primary-dark w-32 rounded-lg text-sm14 p-2" onClick={() => navigate('addupdate')}>
-          Add Contact
-        </button>
+        <h3 className='text-primary-dark'>Favourite Contact</h3>
       </div>
       <div className='bg-primary-light p-1 rounded-md my-2'>
         <input
@@ -177,7 +132,7 @@ const Contacts = () => {
           onChange={handleSreach}
         />
       </div>
-      <ContactTable
+      <CustomTable
         columns={columns}
         data={contacts}
       />
@@ -251,17 +206,9 @@ const Contacts = () => {
         isOpen={openPopup}
         handleClose={() => setOpenPopup(false)}
       />
-      <CustomePopup
-        children={<p className='text-primary-dark'>Are you sure? Do you want to delete <p className='font-semibold'>{contact?.firstname} {contact?.lastname}</p></p>}
-        Icon={<Delete className='text-primary-dark !w-16 !h-16' />}
-        isShowButton
-        isShowIcon
-        isOpen={openDeletePopup}
-        handleSubmit={handleVerifyDelete}
-        handleClose={() => setOpenDeletePopup(false)}
-      />
+
     </ComponentContainer>
   )
 }
 
-export default Contacts
+export default Favourite

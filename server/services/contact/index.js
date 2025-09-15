@@ -33,6 +33,18 @@ const searchContact = async(req) => {
         return myContacts;
 }
 
+const searchAllFavouriteContact = async(req) => {
+    const searchParams = req.query;
+    const query = {favourite: 1}
+    if(searchParams.search){
+            query.$or = [
+                {firstname: { $regex: new RegExp(searchParams.search, 'i') }},
+                {lastname: { $regex: new RegExp(searchParams.search, 'i') }},
+            ]
+        }
+        return Contact.find(query)
+}
+
 const findContactById = async(req) => {
     const query = {_id: req.params.id}
         if(!req.contact.isAdmin){
@@ -50,7 +62,13 @@ const deleteContactById = async(req) => {
     return Contact.deleteOne({_id:req.params.id});
 }
 
+const updateFavContact = async(req) => {
+    return Contact.findByIdAndUpdate(req.params.id, {$bit: {favourite: {xor: 1}}},{new: true, upsert: false,});
+}
+
 exports.searchContact = searchContact;
 exports.findContactById = findContactById;
 exports.updateContactById = updateContactById;
 exports.deleteContactById = deleteContactById;
+exports.updateFavContact = updateFavContact;
+exports.searchAllFavouriteContact = searchAllFavouriteContact;

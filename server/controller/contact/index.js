@@ -1,7 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const { Contact } = require("../../models/contact");
 const { Success, Failuer } = require("../../utils/responseHandler");
-const { searchContact, findContactById, updateContactById, deleteContactById } = require("../../services/contact");
+const { searchContact, findContactById, updateContactById, deleteContactById, updateFavContact, searchAllFavouriteContact } = require("../../services/contact");
 
 const getAllcontacts = async (req, res) => {
     try{
@@ -57,8 +57,35 @@ const deleteContact = async (req, res) => {
     }
 }
 
+const addToFavorite = async (req, res) => {
+    try{
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return Failuer(res, true, 400, "Invalid ID format", [])
+        }
+        const myContacts = await updateFavContact(req)
+        myContacts.save();
+        Success(res, false, 'Contact favorite status updated successfully', myContacts);
+
+    }
+    catch(error){
+        Failuer(res, true, 400, error.message, [])
+    }
+}
+
+const getAllFavouriteContacts = async (req, res) => {
+    try{
+        const myContacts = await searchAllFavouriteContact(req);
+        Success(res, false, 'Retrive all contact successfully', myContacts);
+    }
+    catch(error){
+        Failuer(res, true, 400, error.message, [])
+    }
+}
+
 exports.getAllcontacts = getAllcontacts;
 exports.getIdBaseContact = getIdBaseContact;
 exports.createNewContact = createNewContact;
 exports.updateContact = updateContact;
 exports.deleteContact = deleteContact;
+exports.addToFavorite = addToFavorite;
+exports.getAllFavouriteContacts = getAllFavouriteContacts;
