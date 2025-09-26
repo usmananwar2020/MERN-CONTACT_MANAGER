@@ -16,6 +16,7 @@ const Sidebar = () => {
     { icon: <img src={contact} alt="Contacts" className='w-5 h-5 mr-4' />, title: 'Contacts', link: '/contacts' },
     { icon: <img src={category} alt="Categories" className='w-5 h-5 mr-4' />, title: 'Categories', link: '/categories' },
     { icon: <img src={category} alt="Favourite" className='w-5 h-5 mr-4' />, title: 'Favourite', link: '/favourite' },
+    { icon: <img src={category} alt="Reminder" className='w-5 h-5 mr-4' />, title: 'Reminder', link: '/reminder' },
   ];
 
   const toggleDrawer = () => setIsDrawerOpen((prev) => !prev);

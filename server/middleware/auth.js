@@ -11,7 +11,7 @@ module.exports = function (req, res, next) {
 
     try{
         const isVerified  = JWT.verify(token[1], config.get('jwtPrivateKey'));
-        req.contact = isVerified;
+        req.user = isVerified;
         next();
     }
     catch(err){

@@ -1,5 +1,5 @@
 module.exports = function (req, res, next){
-    if(!req.contact.isAdmin){
+    if(!req.user.isAdmin){
         if(
             // (req.method === 'POST' || req.method === 'DELETE') && 
         req.baseUrl === '/api/categories'){

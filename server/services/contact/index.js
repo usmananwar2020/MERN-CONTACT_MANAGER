@@ -18,13 +18,13 @@ const searchContact = async(req) => {
         
         if (parseInt(searchParams.limit) !== -1) {
 
-            if(req.contact.isAdmin){
+            if(req.user.isAdmin){
                 myContacts = await Contact.find(query)
                 .populate('userId')
                 .skip(parseInt(searchParams.page) ? ((searchParams.page - 1) * searchParams.limit) : 0 )
                 .limit(parseInt(searchParams.limit) ? searchParams.limit : 10)
             } else {
-                query.userId= req.contact._id;
+                query.userId= req.user._id;
                 myContacts = await  Contact.find(query)
                 .skip(parseInt(searchParams.page) ? ((searchParams.page - 1) * searchParams.limit) : 0 )
                 .limit(parseInt(searchParams.limit) ? searchParams.limit : 10)
@@ -47,8 +47,8 @@ const searchAllFavouriteContact = async(req) => {
 
 const findContactById = async(req) => {
     const query = {_id: req.params.id}
-        if(!req.contact.isAdmin){
-            query.userId= req.contact._id
+        if(!req.user.isAdmin){
+            query.userId= req.user._id
         }
     
         return Contact.find(query).populate('userId');
