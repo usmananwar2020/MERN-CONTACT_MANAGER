@@ -21,14 +21,5 @@ const createReminders = async (req, res) => {
         Failuer(res, true, 400, error.message, [])
     }
 }
-const preserveReminders = async (req, res) => {
-    try{
-
-    }
-    catch(error){
-        Failuer(res, true, 400, error.message, [])
-    }
-}
 exports.getReminders = getReminders;
 exports.createReminders = createReminders;
-exports.preserveReminders = preserveReminders;

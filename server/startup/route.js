@@ -3,6 +3,7 @@ const user = require("../routes/user");
 const contact = require("../routes/contact");
 const category = require("../routes/category");
 const reminder = require("../routes/reminder");
+const dashboard = require("../routes/dashboard");
 
 module.exports = function(app) {
     app.use(express.json());
@@ -10,4 +11,5 @@ module.exports = function(app) {
     app.use('/api/contacts', contact)
     app.use('/api/categories', category)
     app.use('/api/reminder', reminder)
+    app.use('/api/dashboard-stats', dashboard)
 };

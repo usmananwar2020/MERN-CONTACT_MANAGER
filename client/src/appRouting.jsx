@@ -14,6 +14,7 @@ import Category from './pages/category';
 import AddUpdateCategory from './pages/category/addUpdateCategory';
 import Favourite from './pages/favourite';
 import Reminder from './pages/reminder';
+import Dashboard from './pages/dahboard';
 
 const routes = [
   { path: "/", element: <OnBoarding />, protectedPath: false },
@@ -22,6 +23,7 @@ const routes = [
     element: <ShellContainer />,
     protectedPath: true,
     children: [
+      { path: "dashboard", element: <Dashboard /> },
       { path: "contacts", element: <Contacts /> },
       { path: "contacts/addupdate", element: <AddUpdateContact /> },
       { path: "contacts/addupdate/:id", element: <AddUpdateContact /> },

@@ -13,6 +13,7 @@ const Sidebar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const navbarItems = [
+    { icon: <img src={contact} alt="Dashboard" className='w-5 h-5 mr-4' />, title: 'Dashboard', link: '/dashboard' },
     { icon: <img src={contact} alt="Contacts" className='w-5 h-5 mr-4' />, title: 'Contacts', link: '/contacts' },
     { icon: <img src={category} alt="Categories" className='w-5 h-5 mr-4' />, title: 'Categories', link: '/categories' },
     { icon: <img src={category} alt="Favourite" className='w-5 h-5 mr-4' />, title: 'Favourite', link: '/favourite' },
