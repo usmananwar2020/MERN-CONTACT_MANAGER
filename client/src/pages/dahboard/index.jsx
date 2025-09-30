@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import ComponentContainer from '../../components/container/componentContainer';
 import ContactTable from '../contacts/contactTable';
-import { GetStorage } from '../../shared/guards/credentialsService';
+import { GetStorage, SetStorage } from '../../shared/guards/credentialsService';
+import { handleToastMessage } from '../../shared/toastify';
 
 const Dashboard = () => {
     const [tabs, setTabs] = useState(['contacts', 'reminders'])
@@ -12,10 +13,12 @@ const Dashboard = () => {
     const [stats, setStats] = useState()
     const [tableData, setTableData] = useState([])
     const [selectedTab, setSelectedTab] = useState('contacts')
+    const [isReminder, setIsReminder] = useState(false);
     useEffect(() => {
         if (storageData?.isAdmin) {
             setTabs([...tabs, 'users'])
         }
+        setIsReminder(storageData?.reminder)
     }, [])
     useEffect(() => {
         getStates(selectedTab);
@@ -30,6 +33,21 @@ const Dashboard = () => {
             if (res && !res.error) {
                 setStats(res.data)
                 setTableData(res.data?.stats)
+            }
+        });
+    }
+    const enableDisableReminder = (data) => {
+        backendCall({
+            url: `reminder/status/${data?._id}`,
+            method: 'PUT',
+            data: { status: !data?.reminder }
+        }).then((res) => {
+            if (res && !res.error) {
+                SetStorage({ ...storageData, reminder: !data?.reminder });
+                setIsReminder(!data?.reminder)
+                handleToastMessage('success', res?.message)
+            } else {
+                handleToastMessage('error', res?.message)
             }
         });
     }
@@ -142,7 +160,13 @@ const Dashboard = () => {
                     )
                 }
             </div>
-            <p className='text-2xl font-bold capitalize p-4 text-primary'>{selectedTab}</p>
+            <div className='flex gap-5 items-center'>
+                <p className='text-2xl font-bold capitalize p-4 text-primary'>{selectedTab}</p>
+                {
+                    selectedTab === 'reminders' ?
+                        <input type="checkbox" checked={isReminder} className='cursor-pointer w-5 h-5' onClick={() => enableDisableReminder(storageData)} /> : null
+                }
+            </div>
 
             <ContactTable
                 columns={selectedTab === 'users' ? userColumns : selectedTab === 'contacts' ? contactColumns : selectedTab === 'reminders' ? reminderColumns : reminderColumns}

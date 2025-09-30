@@ -1,6 +1,7 @@
 const { Reminder } = require("../../models/reminder");
 const { Success, Failuer } = require("../../utils/responseHandler");
-const { searchAllReminders } = require("../../services/reminder")
+const { searchAllReminders, updateUserReminderStatus } = require("../../services/reminder");
+const { ReminderStatus } = require("../../utils/enum");
 
 const getReminders = async (req, res) => {
     try{
@@ -21,5 +22,20 @@ const createReminders = async (req, res) => {
         Failuer(res, true, 400, error.message, [])
     }
 }
+const toggleReminder =  (req, res) => {
+    try{
+        updateUserReminderStatus(req);
+        if(req?.body?.status === ReminderStatus.active){
+            Success(res, false, 'Successfully enabled the reminder');
+        }else{
+            Success(res, false, 'Successfully disable the reminder');
+        }
+    }
+    catch(error){
+        Failuer(res, true, 400, error.message, [])
+    }
+}
+
 exports.getReminders = getReminders;
 exports.createReminders = createReminders;
+exports.toggleReminder = toggleReminder;

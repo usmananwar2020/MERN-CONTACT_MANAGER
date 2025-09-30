@@ -23,6 +23,9 @@
     },
     isAdmin: {
         type: Boolean
+    },
+    reminder: {
+        type: Boolean
     }
  });
 

@@ -43,6 +43,11 @@ const deleteOldReminder = async () => {
     await Reminder.deleteMany({ createdAt: { $lt: date } });
 }
 
+const updateUserReminderStatus = (req) => {
+    Users.updateOne(  { _id: req.params.id} , { $set: { reminder : req?.body.status  } } )
+}
+
 exports.searchAllReminders = searchAllReminders
 exports.getReminderUsers = getReminderUsers
 exports.deleteOldReminder = deleteOldReminder
+exports.updateUserReminderStatus = updateUserReminderStatus
